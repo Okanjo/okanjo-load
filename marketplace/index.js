@@ -37,7 +37,7 @@
 
 var okanjo = require('okanjo'),
     async = require('async'),
-    config = require('./config'),
+    config = require('./../config'),
     // Upload dependencies
     path = require('path'),
     mime = require('mime'),
@@ -285,47 +285,6 @@ function mapCategory(product, callback) {
 		    case "Electronics > Other > Car Electronics": return 219;
 		    case "Electronics > DVD Players": return 221;
 
-		    /*	        // Development
-		     case "Entertainment": return 5;
-		     case "Entertainment > Books": return 233;
-		     case "Entertainment > Books > Fiction": return 240;
-		     case "Entertainment > Books > Nonfiction": return 241;
-		     case "Entertainment > Books > Cooking": return 243;
-		     case "Entertainment > Books > Children's": return 245;
-		     case "Entertainment > Books > Young Adult": return 247;
-		     case "Entertainment > Books > Magazines": return 249;
-		     case "Entertainment > Books > Catalogs": return 250;
-		     case "Entertainment > Books > Audiobooks": return 251;
-		     case "Entertainment > Books > Accessories": return 500;
-		     case "Entertainment > Movies": return 234;
-		     case "Entertainment > Movies > DVD": return 253;
-		     case "Entertainment > Movies > Blu-ray": return 254;
-		     case "Entertainment > Movies > VHS": return 258;
-		     case "Entertainment > Movies > Other": return 259;
-		     case "Entertainment > Music": return 236;
-		     case "Entertainment > Music > Cassettes": return 261;
-		     case "Entertainment > Music > CDs": return 262;
-		     case "Entertainment > Music > Records": return 263;
-		     case "Entertainment > Music > Instruments": return 264;
-		     case "Entertainment > Music > Instruments > Brass": return 546;
-		     case "Entertainment > Music > Instruments > Educational": return 547;
-		     case "Entertainment > Music > Instruments > Accessories": return 548;
-		     case "Entertainment > Music > Instruments > Cases": return 549;
-		     case "Entertainment > Music > Instruments > Keys and Pro Audio": return 550;
-		     case "Entertainment > Music > Instruments > Orchestral String": return 551;
-		     case "Entertainment > Music > Instruments > Percussion": return 552;
-		     case "Entertainment > Music > Instruments > String": return 553;
-		     case "Entertainment > Music > Instruments > Woodwind": return 554;
-		     case "Entertainment > Music > Other": return 543;
-		     case "Entertainment > Music > Amplifiers and Cabinets": return 555;
-		     case "Entertainment > Music > Stage and Lighting Equipment": return 556;
-		     case "Entertainment > Videogames": return 238;
-		     case "Entertainment > Videogames > Games": return 265;
-		     case "Entertainment > Videogames > Consoles": return 266;
-		     case "Entertainment > Videogames > Accessories": return 534;
-		     case "Entertainment > TV Shows": return 523;*/
-
-		    // The real stuff
 		    case "Entertainment": return 5;
 		    case "Entertainment > Books": return 233;
 		    case "Entertainment > Books > Fiction": return 240;
@@ -668,7 +627,7 @@ function processAndLoadProducts(products, callback) {
             store_id: global_store_id || p.store_id || 0,
 
             // Type of product (usually regular)
-            type: okanjo.constants.productType.regular,
+            type: okanjo.constants.marketplace.productType.regular,
 
             // Basic info
             title: p.title || 'Product title',
@@ -677,7 +636,7 @@ function processAndLoadProducts(products, callback) {
             stock: p.stock != null ? p.stock : 20, // Use empty string "" to indicate an on-demand (infinite stock) item
 
             // Product condition - use brandNew or used
-            condition: okanjo.constants.productCondition.brandNew
+            condition: okanjo.constants.marketplace.productCondition.brandNew
         };
 
 
@@ -745,7 +704,7 @@ function processAndLoadProducts(products, callback) {
 
         // Use these fields to configure auction-type products
         // To use, uncomment this block
-//        productData.type = okanjo.constants.productType.auction;
+//        productData.type = okanjo.constants.marketplace.productType.auction;
 //        productData.auction_start = '2014-06-01T00:00:00+00:00'; // ISO 8601 formatted date + time
 //        productData.auction_end =   '2014-06-15T00:00:00+00:00';   // ISO 8601 formatted date + time
 //        productData.auction_min_bid = 5; // Auction starting bid in USD
@@ -774,10 +733,10 @@ function processAndLoadProducts(products, callback) {
         // Then setup stock permutations for every possible set
         // Remember, variant keys must be sorted alphabetically
         productData.variants = {};
-        productData.variants[okanjo.serialize({ "Size": "Small", "Color": "Red" }, true)] = { stock: 10 };
-        productData.variants[okanjo.serialize({ "Size": "Small", "Color": "Purple" }, true)] = { stock: 20 };
-        productData.variants[okanjo.serialize({ "Size": "Large", "Color": "Red" }, true)] = { stock: 30 };
-        productData.variants[okanjo.serialize({ "Size": "Large", "Color": "Purple" }, true)] = { stock: "" }; // Example with on-demand (infinite) stock
+        productData.variants[okanjo.common.serialize({ "Size": "Small", "Color": "Red" }, true)] = { stock: 10 };
+        productData.variants[okanjo.common.serialize({ "Size": "Small", "Color": "Purple" }, true)] = { stock: 20 };
+        productData.variants[okanjo.common.serialize({ "Size": "Large", "Color": "Red" }, true)] = { stock: 30 };
+        productData.variants[okanjo.common.serialize({ "Size": "Large", "Color": "Purple" }, true)] = { stock: "" }; // Example with on-demand (infinite) stock
 
 
         //
@@ -829,8 +788,8 @@ function processAndLoadProducts(products, callback) {
                             // Cached URL image upload
                             //
 
-                            var cachedFile = new okanjo.FileUpload(tmpPath, tmpName, mime.lookup(tmpPath), {
-                                purpose: okanjo.constants.mediaImagePurpose.product
+                            var cachedFile = new okanjo.common.FileUpload(tmpPath, tmpName, mime.lookup(tmpPath), {
+                                purpose: okanjo.constants.marketplace.mediaImagePurpose.product
                             });
 
                             api.postMedia().data(cachedFile).execute(function(err, res) {
@@ -869,8 +828,8 @@ function processAndLoadProducts(products, callback) {
                                             mime = res.headers['content-type'].split(';')[0];
                                         }
 
-                                        var downloadedFile = new okanjo.FileUpload(tmpPath, tmpName, mime, {
-                                            purpose: okanjo.constants.mediaImagePurpose.product
+                                        var downloadedFile = new okanjo.common.FileUpload(tmpPath, tmpName, mime, {
+                                            purpose: okanjo.constants.marketplace.mediaImagePurpose.product
                                         });
 
                                         api.postMedia().data(downloadedFile).execute(function(err, res) {
@@ -897,8 +856,8 @@ function processAndLoadProducts(products, callback) {
                         // LOCAL FILE PATH
                         //
 
-                        var file = new okanjo.FileUpload(img, path.basename(img), mime.lookup(img), {
-                            purpose: okanjo.constants.mediaImagePurpose.product
+                        var file = new okanjo.common.FileUpload(img, path.basename(img), mime.lookup(img), {
+                            purpose: okanjo.constants.marketplace.mediaImagePurpose.product
                         });
 
                         api.postMedia().data(file).execute(function(err, res) {
@@ -938,7 +897,7 @@ function processAndLoadProducts(products, callback) {
                     api.postProduct().data(productData).execute(function(err, res) {
                         if (err) { callback && callback(err); return; }
 
-                        if (res.status == okanjo.Response.Status.OK) {
+                        if (res.status == okanjo.common.Response.status.ok) {
                             console.log(' > Uploaded product', res.data.id);
                             callback && callback(null, res.data);
                         } else {
@@ -968,7 +927,7 @@ function processAndLoadProducts(products, callback) {
 
 
 
-var api = new okanjo.Client(config.api);
+var api = new okanjo.clients.MarketplaceClient(config.marketplace.api);
 
 
 // Watch the log event and handle notifications
@@ -985,10 +944,10 @@ var api = new okanjo.Client(config.api);
  */
 var global_store_id = 0;
 
-api.userLogin().data(config.user).execute(function(err, res) {
+api.userLogin().data(config.marketplace.user).execute(function(err, res) {
     if (err) { console.error(err); return; }
 
-    if (res.status == okanjo.Response.Status.OK) {
+    if (res.status == okanjo.common.Response.status.ok) {
 
         // Use the first store in the list (change this if the user has multiple stores)
         global_store_id = res.data.user.stores[0].id; // TODO: <---- you may need to customize this store id
