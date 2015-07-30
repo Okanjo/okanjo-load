@@ -9,8 +9,8 @@ module.exports = exports = {
             endpoint: 'sandbox-api.okanjo.com'
         },
         user: {
-            action: okanjo.constants.marketplace.loginAction.loginUsernamePassword,
-            username: 'STORE_USER_NAME',
+            action: okanjo.constants.marketplace.loginAction.loginEmailPassword,
+            email: 'STORE_USER_EMAIL',
             password: 'STORE_USER_PASSWORD'
         }
     },

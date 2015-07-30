@@ -20,7 +20,7 @@
     "url": "https://github.com/Okanjo/okanjo-load/issues"
   },
   "dependencies": {
-    "okanjo": "okanjo/okanjo-nodejs#v0.2.0",
+    "okanjo": "^0.2.0",
     "async": "~0.9.0",
     "mime": "~1.2.11",
     "sanitize-filename": "~1.0.1"

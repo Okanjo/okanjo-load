@@ -5,6 +5,9 @@ When stuff changes, it's described here.
 
 # v0.2.0
 
+## 2015-07-30
+ * Updated default config to default to email login method
+
 ## 2015-03-14
 * Bumped version to 0.2.0
 * Migrated everything to use okanjo-nodejs v0.2.0
